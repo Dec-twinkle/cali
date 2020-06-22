@@ -1,0 +1,8 @@
+%YAML:1.0
+---
+min_Z: 1.
+max_Z: 2.
+inter_z: 2.0000000000000001e-01
+inter_xy: 2.0000000000000001e-01
+optic_angle: 45.
+angle_inter: 45.
