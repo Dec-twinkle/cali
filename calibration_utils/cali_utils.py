@@ -69,7 +69,7 @@ class base_utils(object):
         discoff_len = np.size(dist)
         P_init = compose_paramter_vector(intrinsic, dist, extrinsic_list)
 
-        solver = op.root(camera_loss_function, P_init, args=(discoff_len, imgpoints_list, extrinsic_list), method="lm")
+        solver = op.root(camera_loss_function, P_init, args=(discoff_len, imgpoints_list, objpoints_list), method="lm")
         intrinsic_opt, dist_opt, extrinsic_list_opt = decompose_paramter_vector(solver.x,discoff_len)
         reproject_error = base_utils.reprojection_error(intrinsic_opt, dist_opt, extrinsic_list_opt, imgpoints_list, objpoints_list)
         return reproject_error,intrinsic_opt, dist_opt, extrinsic_list_opt
@@ -151,11 +151,11 @@ class base_utils(object):
     def extrinsic_opt(intrinsic, dist, extrinsic, imgpoints_list, objpoints_list):
 
 
-        def lossfunction(P, intrinsic, discoff, extrinsic, imgpoints, real_coor):
-            P = solver.x
+        def lossfunction(P, intrinsic, discoff, imgpoints, real_coor):
             R = transforms3d.quaternions.quat2mat(P[:4])
             T = P[4:]
-            return base_utils.reprojection_error(intrinsic,dist,[extrinsic], [imgpoints], [real_coor])
+            H = np.append(np.append(R,np.transpose([T]),1),np.array([[0,0,0,1]]),0)
+            return base_utils.reprojection_error(intrinsic,discoff,[H] ,[imgpoints], [real_coor])
         P_init = transforms3d.quaternions.mat2quat(extrinsic[:3,:3])
         P_init = np.append(P_init,extrinsic[:3,3])
 
@@ -203,8 +203,8 @@ class base_utils(object):
             imgpoints1_correspont = np.array([])
             imgpoints2_correspont = np.array([])
             objpoints_correspont = np.array([])
-            for j in range(len(imgpoints1.shape[0])):
-                for k in range(len(imgpoints2.shape[0])):
+            for j in range(imgpoints1.shape[0]):
+                for k in range(imgpoints2.shape[0]):
                     if objpoints1[j,0]==objpoints2[k,0] and objpoints1[j,1] == objpoints2[k,1]:
                         imgpoints1_correspont = np.append(imgpoints1_correspont,imgpoints1[j,:])
                         imgpoints2_correspont = np.append(imgpoints2_correspont,imgpoints2[k,:])
@@ -221,25 +221,25 @@ class base_utils(object):
             objpoints_correspont_list, imgpoint1_correspont_list,imgpoint2_correspont_list,intrinsic1,dist1,intrinsic2,
             dist2,None, criteria=criteria)
         H = np.append(np.append(R, T, 1), np.array([[0, 0, 0, 1]]), 0)
+        realcoor = board_corner.copy()
         if board_corner.shape[1] == 2:
             board_corner = np.append(board_corner,np.zeros([board_corner.shape[0],1]),1)
         if board_corner.shape[1] == 3:
             board_corner = np.append(board_corner,np.ones([board_corner.shape[0],1]),1)
-
+        HH = H.copy()
 
         def loss_function(X,real_coor,camera_pose_list1, camera_pose_list2):
             t = X[4:]
             q = X[:4]
             R = transforms3d.quaternions.quat2mat(q)
             H = np.append(np.append(R,np.transpose([t]),1),np.array([[0,0,0,1]]),0)
-            return base_utils.stereo_rme_mm(H,real_coor,camera_pose_list1, camera_pose_list2)
-
+            return base_utils.stereo_rme_mm(H,camera_pose_list1, camera_pose_list2,real_coor)
 
 
         while(True):
             init = transforms3d.quaternions.mat2quat(H[:3, :3])
             init = np.append(init, H[:3, 3])
-            solver = op.root(loss_function, init, args=(board_corner, extrinsic_list1, extrinsic_list2), method='lm')
+            solver = op.root(loss_function, init, args=(realcoor, extrinsic_list1, extrinsic_list2), method='lm')
             X = solver.x
             t = X[4:]
             q = X[:4]
@@ -258,9 +258,10 @@ class base_utils(object):
             del extrinsic_list1[index]
             del extrinsic_list2[index]
         rme = np.mean(errors)
+        return rme,H
 
     @staticmethod
-    def stereo_rme_mm(extrinsic_list1,extrinsic_list2,H,board_corner):
+    def stereo_rme_mm(H,extrinsic_list1,extrinsic_list2,board_corner):
         if board_corner.shape[1] == 2:
             board_corner = np.append(board_corner,np.zeros([board_corner.shape[0],1]),1)
         if board_corner.shape[1] == 3:
@@ -269,7 +270,7 @@ class base_utils(object):
         number = len(extrinsic_list1)
         errors = np.array([])
         for i in range(number):
-            proj = proj = np.dot(np.linalg.inv(extrinsic_list2[i]), np.dot(H, np.dot(extrinsic_list1[i], board_corner)))
+            proj = np.dot(np.linalg.inv(extrinsic_list2[i]), np.dot(H, np.dot(extrinsic_list1[i], board_corner)))
             proj[:, :] = proj[:, :] / proj[3, :]
             error = proj[:3, :] - board_corner[:3, :]
             errors = np.append(errors,error)

@@ -7,7 +7,7 @@ import yaml
 
 
 
-class ChessBoard(board):
+class ChessBoard(object):
 
     marker_X = 0
     marker_Y = 0
@@ -35,6 +35,7 @@ class ChessBoard(board):
                 imgpoints:图片检测的角点
                 objpoints:对于标定板上的点
         """
+
         gray = cv2.cvtColor(pic, cv2.COLOR_BGR2GRAY)
         succ, pic_coor = cv2.findChessboardCorners(gray, (self.marker_X, self.marker_Y), None)
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)

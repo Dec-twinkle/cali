@@ -20,11 +20,12 @@ def calibration(A1, B1, C1, A2, B2, C2):
     A1 = A1[0]
     C2 = C2[0]
     Z,Xt = li.calibration(C1,B1)
+    print(np.dot(C1[0],Z)-np.dot(Xt,B1[0]))
     B_inv = []
     for j in range(len(B2)):
         B_inv.append(np.linalg.inv(B2[j]))
     X,Zt = li.calibration(A2,B_inv)
-
+    print(np.dot(A2[0],X)-np.dot(Zt,B_inv[0]))
     U,_,Vt = np.linalg.svd(Xt[:3,:3])
     Xt[:3,:3] = np.dot(U,Vt)
     U,_,Vt = np.linalg.svd(X[:3,:3])
@@ -39,6 +40,8 @@ def calibration(A1, B1, C1, A2, B2, C2):
 
     Err1 = np.linalg.norm(np.dot(np.dot(A1,X),B1[0])- np.dot(np.dot(Y1,C1[0]),Z))
     Err2 = np.linalg.norm(np.dot(np.dot(A2[0],X),B2[0])- np.dot(np.dot(Y2,C2),Z))
+    print(Err1)
+    print(Err2)
     if Err1<Err2:
         Y = Y1
     else:
