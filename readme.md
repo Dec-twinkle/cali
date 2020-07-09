@@ -33,7 +33,12 @@ opencv-python 3.4.6.27
 Checkerboard calibration board is the most commonly used and most basic calibration board. 
 The general vision system can easily achieve the ideal calibration effect using the checkerboard calibration board.
 
-![image](https://github.com/javapoor/cali/tree/master/image_folder/chessboard.jpg)
+![image](https://github.com/javapoor/cali/blob/master/image_folder/chessboard.jpg)
+
+Apriltagtags is a common calibration board in the field of robots. Compared with chess board, 
+its biggest advantage is that it does not require the calibration board to be fully displayed
+ in the camera field of view.
+
 ###########目录结构描述
 ├── Readme.md                   // help
 ├── app                         // 应用
