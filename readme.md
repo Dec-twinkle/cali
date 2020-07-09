@@ -38,11 +38,14 @@ The general vision system can easily achieve the ideal calibration effect using 
 Apriltagtags is a common calibration board in the field of robots. Compared with chess board, 
 its biggest advantage is that it does not require the calibration board to be fully displayed
  in the camera field of view.
+![image](https://github.com/javapoor/cali/blob/master/image_folder/apriltag.png)
 
-###########目录结构描述
-├── Readme.md                   // help
-├── app                         // 应用
-├── config                      // 配置
+## Structure
+
+```
+├── readme.md                   // help
+├── board                      // apriltag and chess board class
+├── config                      // 
 │   ├── default.json
 │   ├── dev.json                // 开发环境
 │   ├── experiment.json         // 实验
@@ -65,11 +68,4 @@ its biggest advantage is that it does not require the calibration board to be fu
 ├── test
 ├── test-service.js
 └── tools
-
-
-
-###########V1.0.0 版本内容更新
-1. 新功能     aaaaaaaaa
-2. 新功能     bbbbbbbbb
-3. 新功能     ccccccccc
-4. 新功能     ddddddddd
+```
