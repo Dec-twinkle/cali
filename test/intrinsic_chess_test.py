@@ -19,9 +19,10 @@ def getImgList(root_dir):
     return rgb_list
 
 def main():
-    board = ChessBoard("../config/chessboard.yml")
-    imgsize = tuple([1920,1080])
-    root_dir = "../data/stereo/dvs"
+    board = ChessBoard("../config/chessboard_yanzou_0705.yml")
+    imgsize = tuple([3840,2748])
+    #root_dir = "../data/stereo/dvs"
+    root_dir = "D:\\fbs\\0707\\cali20200707_2d"
     img_list = getImgList(root_dir)
     objpoints_list = []
     imgpoints_list = []

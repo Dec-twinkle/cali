@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import os
 if __name__ == "__main__":
-    root_dir = "../data/stereo/dvs"
+    root_dir = "D:\\fbs\\0707\\cali20200707_2d"
     files = os.listdir(root_dir)
     fs2 = cv2.FileStorage(root_dir+'/intrinsic.yml', cv2.FileStorage_READ)
     # R = cv2.cv.Load(root + '/' + png1 + '.yml', name="transform")

@@ -2,12 +2,12 @@
 #
 import cv2
 import numpy as np
-from board import board
+from board.board import board
 import yaml
 
 
 
-class ChessBoard(object):
+class ChessBoard(board):
 
     marker_X = 0
     marker_Y = 0
