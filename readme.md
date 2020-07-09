@@ -5,14 +5,15 @@ affects the subsequent process. As the basis of 3D vision, camera calibration is
 
 This repository contains:
 1. camera intrinsic and extrinsic parameters calibration.
+2. stereo calibration.
 2. hand-in-eye and hand-on-eye robot calibration.
 3. two robot relative pose calibration.
 
 ## Table of Contents
 - [Dependencies](#Dependencies) 
-- [Calibration Board](#Calibration Board)
+- [Board](#Board)
 - [Structure](#Structure)
-- [Calibration type](#Calibration type)
+- [Main](#Main)
 - [License](#License)
 
 
@@ -31,7 +32,7 @@ opencv-python 3.4.6.27
 
 
 
-## Calibration Board
+## Board
 Checkerboard calibration board is the most commonly used and most basic calibration board. 
 The general vision system can easily achieve the ideal calibration effect using the checkerboard calibration board.
 
@@ -58,9 +59,20 @@ its biggest advantage is that it does not require the calibration board to be fu
 └── two_robot_cali_method               // two robot relative pose calibration
 ```
 
-## Calibration type
+## Main
+### intrinsic and extrinsic calibration
+intrinsic and extrinsic calibration is According to the projection model, determine the mapping relationship between 3d points in space and 2d points in picture.
 
-### Contributors
+
+### stereo calibration
+
+
+### hand eye calibration
+
+### two robot calibration
+
+
+## Contributors
 
 This project exists thanks to all the people who contribute. 
 
