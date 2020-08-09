@@ -130,8 +130,13 @@ class base_utils(object):
         real_coors = []
         img_points = []
         n = len(imgpoints_list)
+<<<<<<< HEAD
         for i in range(len(imgpoints_list)):
             l = np.size(imgpoints_list[i], 0)
+=======
+        l = np.size(imgpoints_list[0], 0)
+        for i in range(len(imgpoints_list)):
+>>>>>>> a9a878cb43e13dffec3592cbab7fb57fda9eaf22
             a = np.ndarray([l, 1, 3], dtype=np.float32)
             b = np.ndarray([l, 1, 2], dtype=np.float32)
             for j in range(l):
