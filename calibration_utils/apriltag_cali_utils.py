@@ -5,9 +5,7 @@
 from calibration_utils.cali_utils import base_utils
 import numpy as np
 import cv2
-import yaml
-import matplotlib.pyplot as plt
-
+import transforms3d
 import pupil_apriltags as apriltag
 
 
@@ -96,7 +94,7 @@ class apriltag_cali_utils(base_utils):
 
         return img
     @staticmethod
-    def extrinsic(tags, board, cameraMatrix):
+    def extrinsic(tags, board):
         """
         得到相机的姿态,主要是将每个tag中估计相机姿态使用4分位法进行筛选
         :param tags: 检测图片的tags
@@ -149,8 +147,9 @@ class apriltag_cali_utils(base_utils):
         error_t = np.empty([t.shape[0], 3], dtype=bool)
         error_t[:, :] = np.abs(t[:, :] - mean_t[0, :]) > 3 * std_t[0, :]
         index, _ = np.where(error_t)
-        index_t = np.array(list(set(list(index))))
-        t = np.delete(t, index_t, axis=0)
+        if np.size(index)>0:
+            index_t = np.array(list(set(list(index))))
+            t = np.delete(t, index_t, axis=0)
         mean_q = np.mean(q, axis=0)
         mean_t = np.mean(t, axis=0)
         pose_R = transforms3d.quaternions.quat2mat(mean_q)
