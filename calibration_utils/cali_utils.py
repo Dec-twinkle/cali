@@ -75,7 +75,7 @@ class base_utils(object):
         return reproject_error,intrinsic_opt, dist_opt, extrinsic_list_opt
 
     @staticmethod
-    def reprojection_error(intrisic, dist, extrinsic_list, imgpoints,objpoints_list):
+    def reprojection_error(intrisic, dist, extrinsic_list, imgpoints_list,objpoints_list):
         """
         重投影误差
         :param intrisic: 相机内参
@@ -92,7 +92,7 @@ class base_utils(object):
             real_coor_temp = np.append(objpoints_list[i], np.zeros([objpoints_list[i].shape[0], 1]), 1)
             imagePoints, jacobian = cv2.projectPoints(real_coor_temp, rvec, tvec, intrisic, dist)
             imagePoints = imagePoints.reshape([-1, 2])
-            error = imagePoints - imgpoints[i]
+            error = imagePoints - imgpoints_list[i]
             errors = np.append(errors, error)
         return errors.flatten()
 
@@ -142,7 +142,7 @@ class base_utils(object):
                 b[j, 0, 1] = imgpoints_list[i][j, 1]
             real_coors.append(a)
             img_points.append(b)
-        ret, mtx, dist, rvecs, tvec, stdDeviationsIntrinsics, stdDeviationsExtrinsics, rme = cv2.calibrateCameraExtended(
+        ret, mtx, dist, rvecs, tvecs, stdDeviationsIntrinsics, stdDeviationsExtrinsics, rme = cv2.calibrateCameraExtended(
             real_coors, img_points, imgsize, None, None)
         return rme, mtx, dist
 
@@ -419,6 +419,14 @@ class base_utils(object):
 
         camepose = np.append(np.append(R, np.transpose([T]), 1), np.array([[0, 0, 0, 1]]), 0)
         return True,camepose
+
+    @staticmethod
+    def extrinsic(imgpoints, objpoints, intrinsic, dist):
+        n = objpoints.shape[0]
+        realcoor = np.append(objpoints, np.zeros([n, 1]), 1)
+        revl, rvec, tvec = cv2.solvePnP(realcoor, imgpoints, intrinsic, dist)
+        R = cv2.Rodrigues(rvec)[0]
+        return np.append(np.append(R, tvec, 1), np.array([[0, 0, 0, 1]]), 0)
 
 
 

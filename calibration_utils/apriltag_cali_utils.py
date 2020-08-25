@@ -43,7 +43,7 @@ class apriltag_cali_utils(base_utils):
                 img = cv2.cvtColor(gray, cv2.COLOR_GRAY2RGB)
                 img = apriltag_cali_utils.drawTagAxis(img, tags, cameraMatrix)
                 cv2.namedWindow("apriltag", cv2.WINDOW_NORMAL)
-                cv2.imshow("apriltag", img)
+                cv2.imshow("apriltag", cv2.resize(img,(512,512)))
                 cv2.waitKey(0)
         # for tag in tags:
         #     print(tag.tag_id)
@@ -94,7 +94,7 @@ class apriltag_cali_utils(base_utils):
 
         return img
     @staticmethod
-    def extrinsic(tags, board):
+    def extrinsic_tags(tags, board):
         """
         得到相机的姿态,主要是将每个tag中估计相机姿态使用4分位法进行筛选
         :param tags: 检测图片的tags

@@ -47,6 +47,7 @@ class AprilTagBoard(board.board):
         self.marker_Y = x["marker_Y"]
         self.markerSeparation = x["markerSeparation"]
         self.tag_size = x["tag_size"]
+        self.april_family = x["april_family"]
         f.close()
 
     def GetBoardAllPoints(self):
