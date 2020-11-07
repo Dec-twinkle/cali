@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import os
 if __name__ == "__main__":
-    root_dir = "D:\\data\\jck\\0819\\37"
+    root_dir = "../data/caliration_11_7/color"
     files = os.listdir(root_dir)
     fs2 = cv2.FileStorage(root_dir+'/intrinsic.yml', cv2.FileStorage_READ)
     # R = cv2.cv.Load(root + '/' + png1 + '.yml', name="transform")
@@ -12,7 +12,7 @@ if __name__ == "__main__":
     fs2.release()
 
     for file in files:
-        if file.endswith(".bmp"):
+        if file.endswith(".png"):
         # if file.endswith(".bmp"):
             path = os.path.join(root_dir,file)
             img = cv2.imread(path)

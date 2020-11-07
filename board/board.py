@@ -331,7 +331,8 @@ class board(object):
                           [0, 0, 1]])
             n = len(objPoints_list)
             for i in range(n):
-                Point_cam_cood = cv2.undistortPoints(imgPoints_list[i], A, discoff)
+                imapoints = imgPoints_list[i].reshape([-1,1,2])
+                Point_cam_cood = cv2.undistortPoints(imapoints, A, discoff)
                 Point_cam_cood = Point_cam_cood.reshape(-1, 2)
                 depth_point_acc = np.append(Point_cam_cood, depth_list[i], 1)
                 if Point_cam_cood.shape[0] < 5:
@@ -373,10 +374,12 @@ class board(object):
         if point_depth.shape[0]<10:
             print("深度缺失比较严重")
             return False, None
-        Point_cam_cood = cv2.undistortPoints(imgpoint, intrinsic, dist)
+        Point_cam_cood = cv2.undistortPoints(imgpoint.reshape([-1,1,2]), intrinsic, dist)
         Point_cam_cood = Point_cam_cood.reshape(-1, 2)
         point_in_camera = np.append(Point_cam_cood,np.ones([Point_cam_cood.shape[0],1]),1)
-        point_in_camera[:,:] = point_in_camera[:,:]*point_depth[:,0]
+        for i in range(point_depth.shape[0]):
+            point_in_camera[i, :] = point_in_camera[i, :] * point_depth[i, 0]
+
         plane = utils.get_nice_plane(point_in_camera)
         error_plane = np.array([])
         for j in range(point_in_camera.shape[0]):
@@ -419,7 +422,7 @@ class board(object):
 
             return R, t
 
-        objpoint = np.append(objpoint,np.zeros(objpoint.shape[0],1),1)
+        objpoint = np.append(objpoint,np.zeros([objpoint.shape[0],1]),1)
         R, T = rigid_transform_3D(objpoint, point_in_camera)
 
         camepose = np.append(np.append(R, np.transpose([T]), 1), np.array([[0, 0, 0, 1]]), 0)

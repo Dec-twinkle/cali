@@ -44,10 +44,11 @@ class AprilTagBoard(board.board):
                     self.boardcorner[4 * (i * m + j) + k, 1] = center_y + l / 2.0 * self.conners_order[k,1]
 
     def getParameter(self, configfile):
+        print(configfile)
+        with open(configfile) as f:
+            lines = f.readlines()
+            print(lines)
         fs = cv2.FileStorage(configfile,cv2.FileStorage_READ)
-
-
-
         self.marker_X = int(fs.getNode("marker_X").real())
 
         self.marker_Y = int(fs.getNode("marker_Y").real())
